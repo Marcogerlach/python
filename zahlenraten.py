@@ -1,8 +1,16 @@
 import random
 
+def neuspeichern(inhalt):
+    with open("Statistik.txt", "w") as file:
+        file.write(inhalt)
+
+def auslesen():
+    with open("Statistik.txt", "r") as file:
+        inhalt = file.read()
+    return inhalt
+
 option = "ja"
 while option.lower() == "ja":
-    
     eingaben = []
     zahl = random.randint(1, 100)
     while True:
