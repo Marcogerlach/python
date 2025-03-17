@@ -13,6 +13,6 @@ def generate_qr_code(data, filename):
     img = qr.make_image(fill='black', back_color='white')
     img.save(filename)
 link = input("gebe den link zur Website ein: ")
-filename = "qrcode.png"
+filename = link.split("//")[-1].replace("/", "_") + ".png"
 generate_qr_code(link, filename)
 print(f"QR code generated and saved as {filename}")
