@@ -8,7 +8,7 @@ def auslesen():
     with open("Statistik.txt", "r") as file:
         inhalt = file.read()
     return inhalt
-
+inhalt = auslesen().split(" ")
 option = "ja"
 while option.lower() == "ja":
     eingaben = []
@@ -33,6 +33,9 @@ while option.lower() == "ja":
         eingaben.append(eingabe)
         if zahl == eingabe:
             print(f"{zahl} ist richtig und du hast folgende Zahlen falsch geraten: {len(eingaben) - 1}")
+            statistik = len(eingaben)
+            inhalt.append(" " + str(statistik))
+            neuspeichern(" ".join(inhalt))
             break
         elif zahl < eingabe:
             print("Die gesuchte Zahl ist kleiner.")
