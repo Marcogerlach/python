@@ -8,12 +8,11 @@ word_list = [
     "integer", "float", "boolean", "exception", "module"
 ]
 wort = random.choice(word_list)
-ausgabe = "_" * len(wort)  # Initialize ausgabe with underscores
+ausgabe = "_" * len(wort)  
 antworten = []
 fehler = 0
-
-while True:
-    print(ausgabe)  # Print the current state of ausgabe
+print(ausgabe)
+while True: 
     antwort = input("Gebe einen Buchstaben ein: (klein)")
     antworten.append(antwort)
     buchstabe = 0
