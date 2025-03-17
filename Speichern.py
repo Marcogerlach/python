@@ -12,7 +12,7 @@ lauf = True
 while lauf:
     nameda = False
     namewo = 0
-    mach  = input("Wollen sie speichern,löschen, oder ausgeben: (S(speichern)/A(ausgabe)/L(Ausgabe)/E(Exit))" )
+    mach  = input("Wollen sie speichern,löschen, oder ausgeben: (S(speichern)/A(ausgabe)/L(Löschen)/E(Exit))" )
     if mach == "S":
         name = input("Bitte Namen eingeben: ")
         for i in range(len(inhalte)):
@@ -44,7 +44,9 @@ while lauf:
                 if i + 1 <= len(inhalte):
                     inhalte[i + 1] = inhalte[i + 1][:-1]
                     gefunden = True
+                    print("Name gelöscht")
         if gefunden == False:
             print("Name nicht gefunden")
+        neuspeichern(" ".join(inhalte))
     else:
         print("Ungültige Eingabe, bitte S, A oder E(Exit) eingeben.")
