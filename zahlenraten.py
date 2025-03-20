@@ -13,6 +13,17 @@ option = "ja"
 while option.lower() == "ja":
     eingaben = []
     zahl = random.randint(1, 100)
+    stat = input("Wollen sie die statistik sehen? (ja/nein)")
+    if stat == "ja":
+        ins = 0
+        durchschnitt = 0
+        for i in range(len(inhalt)):
+            if inhalt[i].isdigit():
+                ins += int(inhalt[i])
+        if inhalt:
+            durchschnitt = float(ins) / float(len(inhalt))
+        print("durschnittliche Versuche: " + str(durchschnitt))
+
     while True:
         try:
             print(f"Deine bisherigen eingaben sind {eingaben}")
