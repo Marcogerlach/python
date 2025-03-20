@@ -4,12 +4,12 @@ import time
 
 
 def neuspeichern(stats):
-    with open("Statistik.txt", "w") as file:
+    with open("Statistik.json", "w") as file:
         json.dump(stats, file)
 
 def auslesen():
     try:
-        with open("Statistik.txt", "r") as file:
+        with open("Statistik.json", "r") as file:
             stats = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         stats = {"0": [], "1": [], "2": [], "z0": [], "z1" : [], "z2" : []}  
@@ -44,19 +44,19 @@ while option.lower() == "ja":
         alle_wertez0 = stats["z0"]
         if alle_wertez0:
             durchschnitt = sum(alle_wertez0) / len(alle_wertez0)
-            print("Durchschnittliche Zeit im Zeit modi leicht: " + str(durchschnitt))
+            print(f"Durchschnittliche Zeit im Zeit modi leicht: {durchschnitt:.2f}")
         else:
             print("Keine Statistik vorhanden.")
         alle_wertez1 = stats["z1"]
         if alle_wertez1:
             durchschnitt = sum(alle_wertez1) / len(alle_wertez1)
-            print("Durchschnittliche Zeit im Zeit modi Normal: " + str(durchschnitt))
+            print(f"Durchschnittliche Zeit im Zeit modi Normal: {durchschnitt:.2f}")
         else:
             print("Keine Statistik vorhanden.")
         alle_wertez2 = stats["z2"]
         if alle_wertez2:
             durchschnitt = sum(alle_wertez2) / len(alle_wertez2)
-            print("Durchschnittliche Zeit im Zeit modi Schwer: " + str(durchschnitt))
+            print(f"Durchschnittliche Zeit im Zeit modi Schwer: {durchschnitt:.2f}")
         else:
             print("Keine Statistik vorhanden.")
 
@@ -134,11 +134,16 @@ while option.lower() == "ja":
             if zahl == eingabe:
                 end = time.time()
                 zeit = end - start
-                print(f"{zahl} ist richtig und du hast folgende Zahlen falsch geraten: {len(eingaben) - 1}, in {zeit:.2f} Sekunden")
-                stats["z" + modi].append(zeit)
+                print(f"{zahl} ist richtig und du hast {len(eingaben) - 1} falsch geraten und {zeit:.2f} Sekunden gebraucht")
+                stats["z" + modi].append(float(f"{zeit:.2f}"))
                 neuspeichern(stats)
                 break
             elif zahl < eingabe:
                 print("Die gesuchte Zahl ist kleiner.")
             elif zahl > eingabe:
                 print("Die gesuchte Zahl ist größer.")
+    option = input("Wollen sie weiter spielen: (ja(0)/nein(1))")
+    if option == "1":
+        print("Danke fürs Spielen!")
+    elif option == "0":
+        option == "ja"
