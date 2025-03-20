@@ -97,9 +97,15 @@ while option.lower() == "ja":
                 neuspeichern(stats)
                 break
             elif zahl < eingabe:
-                print("Die gesuchte Zahl ist kleiner.")
+                if eingabe - zahl < 20:
+                    print("Die gesuchte Zahl ist kleiner.")
+                else:
+                    print("Die gesuchte Zahl ist deutlich kleiner.")
             elif zahl > eingabe:
-                print("Die gesuchte Zahl ist größer.")
+                if zahl - eingabe < 20:
+                    print("Die gesuchte Zahl ist größer.")
+                else:
+                    print("Die gesuchte Zahl ist deutlich größer.")
     elif obermodi == "0":
         modi = input("Willst du einen leichten Modus(0), einen normalen Modus(1), oder einen schweren Modus(2)? ")
         grenze = 0
@@ -139,9 +145,15 @@ while option.lower() == "ja":
                 neuspeichern(stats)
                 break
             elif zahl < eingabe:
-                print("Die gesuchte Zahl ist kleiner.")
+                if eingabe - zahl < 20:
+                    print("Die gesuchte Zahl ist kleiner.")
+                else:
+                    print("Die gesuchte Zahl ist deutlich kleiner.")
             elif zahl > eingabe:
-                print("Die gesuchte Zahl ist größer.")
+                if zahl - eingabe < 20:
+                    print("Die gesuchte Zahl ist größer.")
+                else:
+                    print("Die gesuchte Zahl ist deutlich größer.")
     option = input("Wollen sie weiter spielen: (ja(0)/nein(1))")
     if option == "1":
         print("Danke fürs Spielen!")
