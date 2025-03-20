@@ -20,7 +20,6 @@ stats = auslesen()
 option = "ja"
 while option.lower() == "ja":
     eingaben = []
-    zahl = random.randint(1, 100)
     stat = input("Wollen sie die Statistik sehen? (ja/nein) ")
     if stat.lower() == "ja":
         
@@ -32,15 +31,24 @@ while option.lower() == "ja":
             print("Keine Statistik vorhanden.")
     
     modi = input("Willst du einen leichten Modus(0), einen normalen Modus(1), oder einen schweren Modus(2)? ")
-    
-    while modi == "0":
+    grenze = 0
+    if modi == "0":
+        zahl = random.randint(1, 50)
+        grenze = 50
+    elif modi == "1":
+        zahl = random.randint(1, 100)
+        grenze = 100
+    else:
+        zahl = random.randint(1, 200)
+        grenze = 200
+    while True:
         try:
             print(f"Deine bisherigen Eingaben sind {eingaben}")
-            eingabe = int(input("Gebe eine Zahl zwischen 1 und 50 ein: "))
+            eingabe = int(input(f"Gebe eine Zahl zwischen 1 und {grenze} ein: "))
         except ValueError:
             print("Bitte eine gültige Zahl eingeben.")
             continue
-        if eingabe > 50:
+        if eingabe > grenze:
             print(f"{eingabe} ist zu groß")
             continue
         elif eingabe < 1:
@@ -60,62 +68,3 @@ while option.lower() == "ja":
             print("Die gesuchte Zahl ist kleiner.")
         elif zahl > eingabe:
             print("Die gesuchte Zahl ist größer.")
-    
-    while modi == "1":
-        try:
-            print(f"Deine bisherigen Eingaben sind {eingaben}")
-            eingabe = int(input("Gebe eine Zahl zwischen 1 und 100 ein: "))
-        except ValueError:
-            print("Bitte eine gültige Zahl eingeben.")
-            continue
-        if eingabe > 100:
-            print(f"{eingabe} ist zu groß")
-            continue
-        elif eingabe < 1:
-            print(f"{eingabe} ist zu klein")
-            continue
-        if eingabe in eingaben:
-            print(f"{eingabe} hast du schon eingegeben.")
-            continue
-
-        eingaben.append(eingabe)
-        if zahl == eingabe:
-            print(f"{zahl} ist richtig und du hast folgende Zahlen falsch geraten: {len(eingaben) - 1}")
-            stats[modi].append(len(eingaben))
-            neuspeichern(stats)
-            break
-        elif zahl < eingabe:
-            print("Die gesuchte Zahl ist kleiner.")
-        elif zahl > eingabe:
-            print("Die gesuchte Zahl ist größer.")
-    while modi == "2":
-        try:
-            print(f"Deine bisherigen Eingaben sind {eingaben}")
-            eingabe = int(input("Gebe eine Zahl zwischen 1 und 200 ein: "))
-        except ValueError:
-            print("Bitte eine gültige Zahl eingeben.")
-            continue
-        if eingabe > 200:
-            print(f"{eingabe} ist zu groß")
-            continue
-        elif eingabe < 1:
-            print(f"{eingabe} ist zu klein")
-            continue
-        if eingabe in eingaben:
-            print(f"{eingabe} hast du schon eingegeben.")
-            continue
-
-        eingaben.append(eingabe)
-        if zahl == eingabe:
-            print(f"{zahl} ist richtig und du hast folgende Zahlen falsch geraten: {len(eingaben) - 1}")
-            stats[modi].append(len(eingaben))
-            neuspeichern(stats)
-            break
-        elif zahl < eingabe:
-            print("Die gesuchte Zahl ist kleiner.")
-        elif zahl > eingabe:
-            print("Die gesuchte Zahl ist größer.")
-
-    option = input("Willst du noch eine Runde spielen? (ja/nein) ")
-    if option.lower() == "nein":
-        print("Danke fürs Spielen!")
