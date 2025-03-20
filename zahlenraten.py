@@ -23,10 +23,22 @@ while option.lower() == "ja":
     stat = input("Wollen sie die Statistik sehen? (ja/nein) ")
     if stat.lower() == "ja":
         
-        alle_werte = stats["0"] + stats["1"] + stats["2"]
+        alle_werte = stats["0"]
         if alle_werte:
             durchschnitt = sum(alle_werte) / len(alle_werte)
-            print("Durchschnittliche Versuche: " + str(durchschnitt))
+            print("Durchschnittliche Versuche modi leicht: " + str(durchschnitt))
+        else:
+            print("Keine Statistik vorhanden.")
+        alle_werte1 = stats["1"]
+        if alle_werte1:
+            durchschnitt = sum(alle_werte1) / len(alle_werte1)
+            print("Durchschnittliche Versuche modi Normal: " + str(durchschnitt))
+        else:
+            print("Keine Statistik vorhanden.")
+        alle_werte2 = stats["2"]
+        if alle_werte2:
+            durchschnitt = sum(alle_werte2) / len(alle_werte2)
+            print("Durchschnittliche Versuche modi Schwer: " + str(durchschnitt))
         else:
             print("Keine Statistik vorhanden.")
     
