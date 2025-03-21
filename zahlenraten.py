@@ -13,8 +13,8 @@ ref = db.reference("highscores")
 def reff(name):
     ref = db.reference(f"highscores/{name}")
 
-
-
+def onlyref():
+    ref = db.reference("highscores")
 # Test: Highscore speichern
 # add_highscore("Bob", 1500)
 
@@ -58,7 +58,7 @@ def add_highscore(name, zeit):
 def get_highscores():
     highscores = ref.get()
     if highscores:
-        sorted_scores = sorted(highscores.values(), key=lambda x: x["Zeit"], reverse=False)
+        sorted_scores = sorted(highscores.items(), key=lambda item: item[1]["Zeit"], reverse=False)
         return sorted_scores
     return []
 
@@ -86,7 +86,7 @@ while option.lower() == "ja":
         else:
             break
 
-    stat = input("Wollen sie die Statistik sehen, oder die Einstellungen öffnen? (Statistik(0)/Einstellungen(1)/nein(2)) ")
+    stat = input("Wollen sie die Statistik sehen, oder die Rangliste öffnen? (Statistik(0)/Rangliste(1)/nein(2)) ")
     if stat.lower() == "0":
         alle_werte = stats["0"]
         if alle_werte:
@@ -124,6 +124,13 @@ while option.lower() == "ja":
             print(f"Durchschnittliche Zeit im Zeit modi Schwer: {durchschnitt:.2f}")
         else:
             print("Keine Statistik vorhanden.")
+    elif stat.lower() == "1":
+        onlyref()
+        alles = get_highscores()
+        for entry in alles:
+            name, data = entry
+            print(f"Name: {name}, Zeit: {data['Zeit']}")
+        reff(namelesen())
 
     obermodi = input("Zeitmodus(0)/Normal(1)")
     if obermodi == "1":
