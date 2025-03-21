@@ -10,26 +10,17 @@ firebase_admin.initialize_app(cred, {"databaseURL": "https://zahlenraetzel-defau
 
 # Referenz zur Highscore-Datenbank
 ref = db.reference("highscores")
+def reff(name):
+    ref = db.reference(f"highscores/{name}")
 
-# Highscore hinzufügen
-def add_highscore(name, modus, zeit):
-    ref.push({"name": name, "modus1": modus, "Zeit1": zeit})
-    print(f"Highscore für {name} gespeichert!")
 
-# Highscores abrufen & sortieren
-def get_highscores():
-    highscores = ref.get()
-    if highscores:
-        sorted_scores = sorted(highscores.values(), key=lambda x: x["Zeit1"], reverse=False)
-        return sorted_scores
-    return []
 
 # Test: Highscore speichern
-#add_highscore("Alice","1", "300")
-#add_highscore("Bob", 1500)
+# add_highscore("Bob", 1500)
 
 # Test: Highscores abrufen
-#print("🏆 Highscores:")
+# print("🏆 Highscores:")
+
 def checknamen(name):
     for entry in get_highscores():
         if entry.get("name") == name:
@@ -52,6 +43,24 @@ def namelesen():
     except (FileNotFoundError, json.JSONDecodeError):
         return ""  
 
+reff(namelesen)
+
+# Highscore hinzufügen
+def add_highscore(name, zeit):
+    current_highscore = ref.child(name).get()
+    if current_highscore is None or zeit < current_highscore["Zeit"]:
+        ref.update({name: {"Zeit": zeit}})
+        print(f"Highscore für {name} gespeichert!")
+    else:
+        print(f"Highscore für {name} nicht verbessert.")
+
+# Highscores abrufen & sortieren
+def get_highscores():
+    highscores = ref.get()
+    if highscores:
+        sorted_scores = sorted(highscores.values(), key=lambda x: x["Zeit"], reverse=False)
+        return sorted_scores
+    return []
 
 def auslesen():
     try:
@@ -60,7 +69,6 @@ def auslesen():
     except (FileNotFoundError, json.JSONDecodeError):
         stats = {"0": [], "1": [], "2": [], "z0": [], "z1" : [], "z2" : []}  
     return stats
-
 
 stats = auslesen()
 option = "ja"
@@ -80,7 +88,6 @@ while option.lower() == "ja":
 
     stat = input("Wollen sie die Statistik sehen, oder die Einstellungen öffnen? (Statistik(0)/Einstellungen(1)/nein(2)) ")
     if stat.lower() == "0":
-        
         alle_werte = stats["0"]
         if alle_werte:
             durchschnitt = sum(alle_werte) / len(alle_werte)
@@ -164,6 +171,7 @@ while option.lower() == "ja":
         if modi == "0":
             zahl = random.randint(1, 50)
             grenze = 50
+            print(zahl)
         elif modi == "1":
             zahl = random.randint(1, 100)
             grenze = 100
@@ -202,14 +210,8 @@ while option.lower() == "ja":
                 print("Die gesuchte Zahl ist größer.")
     datenstat = get_highscores()
     found = False
-    for entry in datenstat:
-        if namelesen() == entry["name"]:
-            found = True
-        
-            if float(entry["Zeit1"]) > zeit:
-                add_highscore(namelesen(), modi, float(f"{zeit:.2f}"))
     if not found:
-        add_highscore(namelesen(), modi, float(f"{zeit:.2f}"))
+        add_highscore(namelesen(), float(f"{zeit:.2f}"))
     option = input("Wollen sie weiter spielen: (ja(0)/nein(1))")
     if option == "1":
         print("Danke fürs Spielen!")
