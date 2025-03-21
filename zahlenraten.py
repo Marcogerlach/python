@@ -1,11 +1,57 @@
 import json
 import random
 import time
+import firebase_admin
+from firebase_admin import credentials, db
 
+# Verbindung zur Firebase-Datenbank herstellen
+cred = credentials.Certificate("zahlenraetzel-firebase-adminsdk-fbsvc-3f429f03e3.json")  
+firebase_admin.initialize_app(cred, {"databaseURL": "https://zahlenraetzel-default-rtdb.europe-west1.firebasedatabase.app/"})
+
+# Referenz zur Highscore-Datenbank
+ref = db.reference("highscores")
+
+# Highscore hinzufügen
+def add_highscore(name, modus, zeit):
+    ref.push({"name": name, "modus1": modus, "Zeit1": zeit})
+    print(f"Highscore für {name} gespeichert!")
+
+# Highscores abrufen & sortieren
+def get_highscores():
+    highscores = ref.get()
+    if highscores:
+        sorted_scores = sorted(highscores.values(), key=lambda x: x["Zeit1"], reverse=False)
+        return sorted_scores
+    return []
+
+# Test: Highscore speichern
+#add_highscore("Alice","1", "300")
+#add_highscore("Bob", 1500)
+
+# Test: Highscores abrufen
+#print("🏆 Highscores:")
+def checknamen(name):
+    for entry in get_highscores():
+        if entry.get("name") == name:
+            return True
+    return False  
 
 def neuspeichern(stats):
     with open("Statistik.json", "w") as file:
         json.dump(stats, file)
+
+def namespeichern(name):
+    with open("name.json", "w") as file:
+        json.dump({"name": name}, file)
+
+def namelesen():
+    try:
+        with open("name.json", "r") as file:
+            name_data = json.load(file)
+        return name_data["name"]
+    except (FileNotFoundError, json.JSONDecodeError):
+        return ""  
+
 
 def auslesen():
     try:
@@ -20,8 +66,20 @@ stats = auslesen()
 option = "ja"
 while option.lower() == "ja":
     eingaben = []
-    stat = input("Wollen sie die Statistik sehen? (ja/nein) ")
-    if stat.lower() == "ja":
+    while True:
+        if namelesen() == "":
+            name = input("Geben sie einen Namen ein für die Statistik: ")
+            if not checknamen(name):
+                namespeichern(name)
+                print("Name gespeichert!")
+                break
+            else:
+                print("Name existiert schon!")
+        else:
+            break
+
+    stat = input("Wollen sie die Statistik sehen, oder die Einstellungen öffnen? (Statistik(0)/Einstellungen(1)/nein(2)) ")
+    if stat.lower() == "0":
         
         alle_werte = stats["0"]
         if alle_werte:
@@ -97,15 +155,9 @@ while option.lower() == "ja":
                 neuspeichern(stats)
                 break
             elif zahl < eingabe:
-                if eingabe - zahl < 20:
-                    print("Die gesuchte Zahl ist kleiner.")
-                else:
-                    print("Die gesuchte Zahl ist deutlich kleiner.")
+                print("Die gesuchte Zahl ist kleiner.")
             elif zahl > eingabe:
-                if zahl - eingabe < 20:
-                    print("Die gesuchte Zahl ist größer.")
-                else:
-                    print("Die gesuchte Zahl ist deutlich größer.")
+                print("Die gesuchte Zahl ist größer.")
     elif obermodi == "0":
         modi = input("Willst du einen leichten Modus(0), einen normalen Modus(1), oder einen schweren Modus(2)? ")
         grenze = 0
@@ -145,17 +197,21 @@ while option.lower() == "ja":
                 neuspeichern(stats)
                 break
             elif zahl < eingabe:
-                if eingabe - zahl < 20:
-                    print("Die gesuchte Zahl ist kleiner.")
-                else:
-                    print("Die gesuchte Zahl ist deutlich kleiner.")
+                print("Die gesuchte Zahl ist kleiner.")
             elif zahl > eingabe:
-                if zahl - eingabe < 20:
-                    print("Die gesuchte Zahl ist größer.")
-                else:
-                    print("Die gesuchte Zahl ist deutlich größer.")
+                print("Die gesuchte Zahl ist größer.")
+    datenstat = get_highscores()
+    found = False
+    for entry in datenstat:
+        if namelesen() == entry["name"]:
+            found = True
+        
+            if float(entry["Zeit1"]) > zeit:
+                add_highscore(namelesen(), modi, float(f"{zeit:.2f}"))
+    if not found:
+        add_highscore(namelesen(), modi, float(f"{zeit:.2f}"))
     option = input("Wollen sie weiter spielen: (ja(0)/nein(1))")
     if option == "1":
         print("Danke fürs Spielen!")
     elif option == "0":
-        option == "ja"
+        option = "ja"
